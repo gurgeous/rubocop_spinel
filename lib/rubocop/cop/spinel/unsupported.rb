@@ -67,7 +67,7 @@ module RuboCop
 
         def message_for(name)
           case name.to_sym
-          when :send then "Spinel only supports `send` with a literal symbol."
+          when :send then "Spinel only supports receiver-style `obj.send(:literal_symbol)`."
           when :Thread, :Mutex then "Spinel does not support threads or mutexes."
           when :prepend then "Spinel does not support module/class `prepend`."
           else; "Spinel does not support `#{name}`."

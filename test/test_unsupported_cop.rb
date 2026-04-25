@@ -36,8 +36,8 @@ class TestUnsupportedCop < Minitest::Test
 
     assert_equal 12, offenses.length
     assert_equal [
-      "Spinel only supports `send` with a literal symbol.",
-      "Spinel only supports `send` with a literal symbol.",
+      "Spinel only supports receiver-style `obj.send(:literal_symbol)`.",
+      "Spinel only supports receiver-style `obj.send(:literal_symbol)`.",
       "Spinel does not support `public_send`.",
       "Spinel does not support `const_get`.",
       "Spinel does not support `extend`.",

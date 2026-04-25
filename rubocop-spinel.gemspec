@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.authors = ["gurgeous"]
   s.email = ["amd@gurge.com"]
 
-  s.summary = "Short summary of what the gem does."
+  s.summary = "Custom RuboCop cops for Spinel compatibility."
   s.homepage = "https://github.com/gurgeous/rubocop-spinel"
   s.license = "MIT"
   s.required_ruby_version = ">= 3.0.0"
