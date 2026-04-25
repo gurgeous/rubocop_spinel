@@ -1,0 +1,5 @@
+---
+Spinel/Unsupported:
+  Description: Ban Ruby features unsupported by Spinel.
+  Enabled: true
+  VersionAdded: "0.1.0"

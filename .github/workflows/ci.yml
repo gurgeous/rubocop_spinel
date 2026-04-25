@@ -1,0 +1,30 @@
+name: ci
+
+on:
+  pull_request:
+    paths-ignore: ["**.md"]
+  push:
+    branches: [main]
+    paths-ignore: ["**.md"]
+  workflow_dispatch:
+
+jobs:
+  test:
+    strategy:
+      max-parallel: 3
+      matrix:
+        os: [macos, ubuntu]
+        ruby-version: [4, 3.4]
+    runs-on: ${{ matrix.os }}-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: jdx/mise-action@v3
+        with:
+          experimental: true # required for post-install and binary rubies
+          mise_toml: |
+            [hooks]
+            postinstall = ['bundle install']
+            [tools]
+            just = "latest"
+            ruby = "${{ matrix.ruby-version }}"
+      - run: just ci

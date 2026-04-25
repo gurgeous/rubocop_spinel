@@ -1,0 +1,5 @@
+/.env*
+/.ruby-lsp/
+/tmp/
+# gems don't need to include this since the gemspec is enough
+Gemfile.lock

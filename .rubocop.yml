@@ -1,0 +1,60 @@
+require:
+  - standard
+
+inherit_gem:
+  standard: config/ruby-3.3.yml
+  standard-custom: config/base.yml
+  standard-performance: config/base.yml
+
+plugins:
+  - standard-custom
+  - standard-performance
+  - rubocop-performance
+
+AllCops:
+  # We completely override Exclude rather than using `inherit_mode: merge` because
+  # we want to undo the exclusion of `bin/*` from rubocop-rails. So we must recreate the
+  # full exclusion list from all of our parent configs.
+  Exclude:
+    - .git/**/*
+    - tmp/**/*
+    - vendor/**/*
+  NewCops: enable
+  SuggestExtensions: false
+
+#
+# fight with standardrb!
+#
+
+Bundler/OrderedGems: { Enabled: true } # sort Gemfile
+Lint/MissingSuper: { Enabled: true } # must call `super`
+Lint/NonLocalExitFromIterator: { Enabled: false } # allow return in iterators
+Lint/RedundantDirGlobSort: { Enabled: true } # glob already sorted
+Naming/FileName: { Enabled: true } # duh
+Naming/MemoizedInstanceVariableName: { Enabled: true } # clean memo ivars
+Naming/MethodName: { Enabled: true } # keep method names conventional
+Performance/MapCompact: { Enabled: true } # filter_map-ish style
+Performance/RegexpMatch: { Enabled: false } # local style is fine
+Performance/SelectMap: { Enabled: true } # filter_map-ish style
+Style/BlockDelimiters: { Enabled: true } # do/end vs braces
+Style/ClassMethodsDefinitions: { Enabled: true } # avoid "class << self"
+Style/CollectionCompact: { Enabled: true } # compact over reject
+Style/CollectionMethods: { Enabled: true } # modern collection helpers
+Style/FrozenStringLiteralComment: { Enabled: true, EnforcedStyle: never } # nope
+Style/HashEachMethods: { Enabled: true } # each_key/value helpers
+Style/HashSyntax: { EnforcedShorthandSyntax: always } # modern hash syntax
+Style/HashTransformKeys: { Enabled: true } # transform_keys
+Style/HashTransformValues: { Enabled: true } # transform_values
+Style/MinMax: { Enabled: true } # minmax when fitting
+Style/NestedTernaryOperator: { Enabled: false } # we do this sometimes
+Style/NonNilCheck: { Enabled: false } # allow x != nil for clarity
+Style/PreferredHashMethods: { Enabled: true } # modern hash helpers
+Style/RedundantAssignment: { Enabled: false } # allows s=xxx;s=yyy;s
+Style/RedundantInitialize: { Enabled: true } # remove pointless initialize
+Style/RedundantReturn: { Enabled: false } # sometimes we do this while working on something
+Style/SelectByRegexp: { Enabled: true } # grep-like selection
+Style/StringConcatenation: { Enabled: true } # interpolation
+Style/SymbolArray: { Enabled: true } # %i for symbol arrays
+Style/TrailingCommaInArrayLiteral: { EnforcedStyleForMultiline: consistent_comma } # commas!!
+Style/TrailingCommaInHashLiteral: { EnforcedStyleForMultiline: consistent_comma } # commas!!
+Style/WordArray: { Enabled: true } # %w for word arrays

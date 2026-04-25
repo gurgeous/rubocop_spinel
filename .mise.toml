@@ -1,0 +1,10 @@
+[env]
+_.path = ["{{config_root}}/bin"]
+_.file = ".env.local"
+
+[hooks]
+postinstall = ["bundle install"]
+
+[tools]
+just = "latest"
+ruby = "latest"
