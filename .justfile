@@ -21,6 +21,9 @@ pry:
 test:
   rake test
 
+spinel-test-cop TARGET="../spinel/test":
+  bundle exec rubocop -r ./lib/rubocop_spinel --only Spinel/Unsupported "{{TARGET}}"
+
 test-watch *ARGS:
   watchexec --stop-timeout=0 --clear clear just test "{{ARGS}}"
 

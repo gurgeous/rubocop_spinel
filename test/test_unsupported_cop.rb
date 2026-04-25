@@ -23,15 +23,17 @@ class TestUnsupportedCop < Minitest::Test
       send(:size)
       target.send(name)
       target.public_send(name)
+      extend Greeter
       define_method(name) { 1 }
       method_missing(:foo)
     RUBY
 
-    assert_equal 5, offenses.length
+    assert_equal 6, offenses.length
     assert_equal [
       "Spinel only supports `send` with a literal symbol.",
       "Spinel only supports `send` with a literal symbol.",
       "Spinel does not support `public_send`.",
+      "Spinel does not support `extend`.",
       "Spinel does not support `define_method`.",
       "Spinel does not support `method_missing`.",
     ], offenses.map(&:message)
@@ -48,6 +50,21 @@ class TestUnsupportedCop < Minitest::Test
       "Spinel does not support threads or mutexes.",
       "Spinel does not support threads or mutexes.",
     ], offenses.map(&:message)
+  end
+
+  def test_flags_singleton_classes
+    offenses = inspect_source(<<~RUBY)
+      class Person
+        class << self
+          def greet
+            42
+          end
+        end
+      end
+    RUBY
+
+    assert_equal 1, offenses.length
+    assert_equal ["Spinel does not support singleton classes."], offenses.map(&:message)
   end
 
   def test_allows_supported_calls

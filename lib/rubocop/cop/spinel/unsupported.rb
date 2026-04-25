@@ -9,6 +9,7 @@ module RuboCop
           class_eval
           define_method
           eval
+          extend
           instance_eval
           method_missing
           module_eval
@@ -29,6 +30,10 @@ module RuboCop
           add_offense(node, message: message_for(node.const_name))
         end
 
+        def on_sclass(node)
+          add_offense(node, message: "Spinel does not support singleton classes.")
+        end
+
         private
 
         def allowed_send?(node)
@@ -43,6 +48,8 @@ module RuboCop
           case name.to_sym
           when :send
             "Spinel only supports `send` with a literal symbol."
+          when :extend
+            "Spinel does not support `extend`."
           when :Thread, :Mutex
             "Spinel does not support threads or mutexes."
           else
