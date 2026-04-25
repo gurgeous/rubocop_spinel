@@ -21,18 +21,14 @@ pry:
 test:
   rake test
 
-spinel-test-cop TARGET="../spinel/test":
-  bundle exec rubocop -r ./lib/rubocop_spinel --only Spinel/Unsupported "{{TARGET}}"
+test-spinel:
+  rubocop -r ./lib/rubocop_spinel --only Spinel/Unsupported ../spinel/test ../spinel/spinel_codegen.rb
 
 test-watch *ARGS:
   watchexec --stop-timeout=0 --clear clear just test "{{ARGS}}"
 
 #
 # gem stuff
-#
-
-#
-# gem tasks
 #
 
 gemver := `cat lib/rubocop/spinel/version.rb | grep -Eo "[0-9]+\.[0-9]+\.[0-9]+"`
@@ -55,7 +51,6 @@ gem-push: check-git-status gem-build
   just banner "tagging..." && git tag -a "v{{gemver}}" -m "Tagging {{gemver}}" && git push --tags
   just banner "pushing..." && gem push {{gemout}}
   just banner "✓ gem-push ✓"
-
 
 #
 # util

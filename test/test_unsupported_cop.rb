@@ -23,19 +23,31 @@ class TestUnsupportedCop < Minitest::Test
       send(:size)
       target.send(name)
       target.public_send(name)
+      Foo.const_get(:BAR)
       extend Greeter
       define_method(name) { 1 }
+      define_singleton_method(:x) { 1 }
       method_missing(:foo)
+      module_function :foo
+      singleton_method(:foo)
+      remove_method :foo
+      undef_method :foo
     RUBY
 
-    assert_equal 6, offenses.length
+    assert_equal 12, offenses.length
     assert_equal [
       "Spinel only supports `send` with a literal symbol.",
       "Spinel only supports `send` with a literal symbol.",
       "Spinel does not support `public_send`.",
+      "Spinel does not support `const_get`.",
       "Spinel does not support `extend`.",
       "Spinel does not support `define_method`.",
+      "Spinel does not support `define_singleton_method`.",
       "Spinel does not support `method_missing`.",
+      "Spinel does not support `module_function`.",
+      "Spinel does not support `singleton_method`.",
+      "Spinel does not support `remove_method`.",
+      "Spinel does not support `undef_method`.",
     ], offenses.map(&:message)
   end
 
@@ -65,6 +77,16 @@ class TestUnsupportedCop < Minitest::Test
 
     assert_equal 1, offenses.length
     assert_equal ["Spinel does not support singleton classes."], offenses.map(&:message)
+  end
+
+  def test_flags_module_prepend_but_allows_receiver_prepend
+    offenses = inspect_source(<<~RUBY)
+      prepend Greeter
+      name.prepend("x")
+    RUBY
+
+    assert_equal 1, offenses.length
+    assert_equal ["Spinel does not support module/class `prepend`."], offenses.map(&:message)
   end
 
   def test_allows_supported_calls
