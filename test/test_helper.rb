@@ -12,9 +12,7 @@ class Minitest::Test
 
   def before_all = super
   def after_all = super
-
   def setup = super
-
   def teardown = super
 
   protected
