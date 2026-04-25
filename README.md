@@ -1,4 +1,4 @@
-# RubocopSpinel [![test](https://github.com/gurgeous/rubocop-spinel/actions/workflows/test.yml/badge.svg)](https://github.com/gurgeous/rubocop-spinel/actions/workflow>)
+# RuboCop Spinel [![test](https://github.com/gurgeous/rubocop-spinel/actions/workflows/test.yml/badge.svg)](https://github.com/gurgeous/rubocop-spinel/actions/workflow>)
 
 Custom RuboCop cops for Spinel compatibility.
 
@@ -23,7 +23,7 @@ require "rubocop_spinel"
 `.rubocop.yml`:
 
 ```yml
-require:
+plugins:
   - rubocop-spinel
 ```
 

@@ -32,7 +32,7 @@ test-watch *ARGS:
 # gem tasks
 #
 
-gemver := `cat lib/rubocop_spinel/version.rb | grep -Eo "[0-9]+\.[0-9]+\.[0-9]+"`
+gemver := `cat lib/rubocop/spinel/version.rb | grep -Eo "[0-9]+\.[0-9]+\.[0-9]+"`
 gemout := "tmp/rubocop-spinel-" + gemver + ".gem"
 
 check-git-status:

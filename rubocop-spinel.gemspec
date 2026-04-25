@@ -1,10 +1,10 @@
 # gem metadata
 
-require_relative "lib/rubocop_spinel/version"
+require_relative "lib/rubocop/spinel/version"
 
 Gem::Specification.new do |s|
   s.name = "rubocop-spinel"
-  s.version = RubocopSpinel::VERSION
+  s.version = RuboCop::Spinel::VERSION
   s.authors = ["gurgeous"]
   s.email = ["amd@gurge.com"]
 
@@ -22,5 +22,6 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   # runtime dependencies
+  s.add_dependency "lint_roller", "~> 1.1"
   s.add_dependency "rubocop", ">= 1.84", "< 2.0"
 end
