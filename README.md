@@ -1,21 +1,47 @@
 # RuboCop Spinel [![ci](https://github.com/gurgeous/rubocop_spinel/actions/workflows/ci.yml/badge.svg)](https://github.com/gurgeous/rubocop_spinel/actions/workflows/ci.yml)
 
-Custom RuboCop cops for Spinel compatibility.
+Custom cop for [Spinel](https://github.com/matz/spinel), warns on Ruby code that is not (yet) supported by Spinel.
 
-### Install
+## Installation
 
 ```rb
 # add to Gemfile
 gem "rubocop_spinel"
 ```
 
-Then add to `.rubocop.yml`:
-
 ```yml
+# add to rubocop.yml
 plugins:
   - rubocop_spinel
 ```
 
-### Changelog
+## Example Errors
+
+````rb
+class Example
+  class << self
+    def bad
+      42
+    end
+  end
+end
+
+Thread.new { puts Example.bad }
+```
+
+```
+sample.rb:2:3: C: Spinel/Unsupported: Spinel does not support singleton classes.
+class << self ...
+^^^^^^^^^^^^^
+sample.rb:9:1: C: Spinel/Unsupported: Spinel does not support threads or mutexes.
+Thread.new { puts Example.bad }
+^^^^^^
+````
+
+## Changelog
 
 #### 0.0.1 (unreleased)
+
+```
+
+```
