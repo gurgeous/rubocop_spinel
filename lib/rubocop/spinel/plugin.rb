@@ -7,9 +7,9 @@ module RuboCop
     class Plugin < LintRoller::Plugin
       def about
         LintRoller::About.new(
-          name: "rubocop-spinel",
+          name: "rubocop_spinel",
           version: VERSION,
-          homepage: "https://github.com/gurgeous/rubocop-spinel",
+          homepage: "https://github.com/gurgeous/rubocop_spinel",
           description: "Custom RuboCop cops for Spinel compatibility."
         )
       end

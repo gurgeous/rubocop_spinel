@@ -10,10 +10,10 @@ check: lint test
 ci: check
 
 fmt:
-  rubocop -a
+  bundle exec rubocop -a
 
 lint:
-  rubocop
+  bundle exec rubocop
 
 pry:
   pry -I lib -r rubocop_spinel.rb
@@ -22,7 +22,7 @@ test:
   rake test
 
 test-spinel:
-  rubocop -r ./lib/rubocop_spinel --only Spinel/Unsupported ../spinel/test ../spinel/spinel_codegen.rb
+  bundle exec rubocop -r ./lib/rubocop_spinel --only Spinel/Unsupported ../spinel/test ../spinel/spinel_codegen.rb
 
 test-watch *ARGS:
   watchexec --stop-timeout=0 --clear clear just test "{{ARGS}}"
@@ -32,7 +32,7 @@ test-watch *ARGS:
 #
 
 gemver := `cat lib/rubocop/spinel/version.rb | grep -Eo "[0-9]+\.[0-9]+\.[0-9]+"`
-gemout := "tmp/rubocop-spinel-" + gemver + ".gem"
+gemout := "tmp/rubocop_spinel-" + gemver + ".gem"
 
 check-git-status:
   if [ ! -z "$(git status --porcelain)" ]; then echo "git status is dirty, bailing."; exit 1; fi

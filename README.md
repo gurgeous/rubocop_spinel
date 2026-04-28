@@ -1,34 +1,20 @@
-# RuboCop Spinel [![test](https://github.com/gurgeous/rubocop-spinel/actions/workflows/test.yml/badge.svg)](https://github.com/gurgeous/rubocop-spinel/actions/workflow>)
+# RuboCop Spinel [![ci](https://github.com/gurgeous/rubocop_spinel/actions/workflows/ci.yml/badge.svg)](https://github.com/gurgeous/rubocop_spinel/actions/workflows/ci.yml)
 
 Custom RuboCop cops for Spinel compatibility.
 
 ### Install
 
 ```rb
-gem "rubocop-spinel"
+# add to Gemfile
+gem "rubocop_spinel"
 ```
 
-Or:
-
-```sh
-gem install rubocop-spinel
-```
-
-### Usage
-
-```rb
-require "rubocop_spinel"
-```
-
-`.rubocop.yml`:
+Then add to `.rubocop.yml`:
 
 ```yml
 plugins:
-  - rubocop-spinel
+  - rubocop_spinel
 ```
-
-Current cops:
-- `Spinel/Unsupported`: flags user-facing Ruby features Spinel does not support
 
 ### Changelog
 
