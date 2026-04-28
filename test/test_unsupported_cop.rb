@@ -1,5 +1,7 @@
 # tests for the Spinel unsupported-feature cop
 
+require_relative "test_helper"
+
 class TestUnsupportedCop < Minitest::Test
   def test_flags_eval_family
     offenses = inspect_source(<<~RUBY)
