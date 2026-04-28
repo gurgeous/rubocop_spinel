@@ -17,7 +17,7 @@ plugins:
 
 ## Example Errors
 
-````rb
+```rb
 class Example
   class << self
     def bad
