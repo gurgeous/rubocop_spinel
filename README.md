@@ -36,12 +36,10 @@ class << self ...
 sample.rb:9:1: C: Spinel/Unsupported: Spinel does not support threads or mutexes.
 Thread.new { puts Example.bad }
 ^^^^^^
-````
+```
 
 ## Changelog
 
-#### 0.0.1 (unreleased)
+#### 0.0.1 (Apr '26)
 
-```
-
-```
+- first release
