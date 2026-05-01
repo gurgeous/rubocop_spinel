@@ -7,11 +7,9 @@ module RuboCop
         BANNED_METHODS = %i[
           class_eval
           const_get
-          define_method
           define_singleton_method
           eval
           extend
-          instance_eval
           method_missing
           module_eval
           module_function
@@ -20,10 +18,12 @@ module RuboCop
           singleton_method
           undef_method
         ].freeze
-        RESTRICT_ON_SEND = (BANNED_METHODS + %i[prepend send]).freeze
+        RESTRICT_ON_SEND = (BANNED_METHODS + %i[define_method instance_eval prepend send]).freeze
         TOP_LEVEL_CONSTS = %i[Mutex Thread].freeze
 
         def on_send(node)
+          return handle_define_method(node) if node.method_name == :define_method
+          return handle_instance_eval(node) if node.method_name == :instance_eval
           # `prepend` is only unsupported as a module/class feature.
           return handle_prepend(node) if node.method_name == :prepend
           return if allowed_send?(node)
@@ -40,10 +40,24 @@ module RuboCop
 
         # `class << self` compiles in Spinel but does not work correctly.
         def on_sclass(node)
+          return if supported_singleton_accessor?(node)
+
           add_offense(node, message: "Spinel does not support singleton classes.")
         end
 
         private
+
+        def handle_define_method(node)
+          return if supported_define_method?(node)
+
+          add_offense(node.loc.selector, message: message_for(:define_method))
+        end
+
+        def handle_instance_eval(node)
+          return if supported_instance_eval?(node)
+
+          add_offense(node.loc.selector, message: message_for(:instance_eval))
+        end
 
         # Spinel rewrites receiver-style `obj.send(:name)` during parsing.
         def allowed_send?(node)
@@ -59,6 +73,60 @@ module RuboCop
         # Keep normal receiver calls like `str.prepend("x")` allowed.
         def unsupported_prepend?(node)
           node.method_name == :prepend && node.receiver.nil?
+        end
+
+        def supported_define_method?(node)
+          node.receiver.nil? && node.block_node && node.arguments.one? && node.first_argument&.sym_type?
+        end
+
+        # Spinel supports `recv.instance_eval { ... }` and the exact
+        # `def m(&block); instance_eval(&block); end` trampoline shape.
+        def supported_instance_eval?(node)
+          supported_instance_eval_block?(node) || supported_instance_eval_trampoline?(node)
+        end
+
+        def supported_instance_eval_block?(node)
+          node.receiver && node.block_node && !node.arguments?
+        end
+
+        def supported_instance_eval_trampoline?(node)
+          return false unless node.receiver.nil? && node.arguments.one?
+
+          block_pass = node.first_argument
+          return false unless block_pass&.block_pass_type?
+
+          forwarded = block_pass.children.first
+          return false unless forwarded&.lvar_type?
+
+          method_def = node.each_ancestor(:def, :defs).first
+          return false unless method_def&.body == node
+
+          block_arg = method_def.arguments.children.first
+          return false unless method_def.arguments.children.one? && block_arg&.blockarg_type?
+
+          forwarded.children.first == block_arg.children.first
+        end
+
+        def supported_singleton_accessor?(node)
+          return false unless node.children.first&.self_type?
+          return false unless singleton_owner(node)&.module_type?
+
+          singleton_body(node).all? { supported_singleton_accessor_call?(_1) }
+        end
+
+        def singleton_owner(node)
+          node.each_ancestor.find { _1.class_type? || _1.module_type? }
+        end
+
+        def singleton_body(node)
+          return [] unless node.body
+
+          node.body.begin_type? ? node.body.children : [node.body]
+        end
+
+        def supported_singleton_accessor_call?(node)
+          node.send_type? && node.receiver.nil? && node.method?(:attr_accessor) &&
+            node.arguments.all?(&:sym_type?)
         end
 
         def top_level_const?(node)

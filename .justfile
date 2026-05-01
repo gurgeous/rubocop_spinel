@@ -22,7 +22,8 @@ test:
   rake test
 
 test-spinel:
-  bundle exec rubocop -r ./lib/rubocop_spinel --only Spinel/Unsupported ../spinel/test ../spinel/spinel_codegen.rb
+  bundle exec rubocop -c test/test_spinel.yml -r ./lib/rubocop_spinel --only Spinel/Unsupported \
+    ../spinel/test ../spinel/spinel_codegen.rb
 
 test-watch *ARGS:
   watchexec --stop-timeout=0 --clear clear just test "{{ARGS}}"
