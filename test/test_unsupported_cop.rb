@@ -81,6 +81,22 @@ class TestUnsupportedCop < Minitest::Test
     assert_equal ["Spinel does not support singleton classes."], offenses.map(&:message)
   end
 
+  def test_allows_supported_define_method
+    offenses = inspect_source(<<~RUBY)
+      define_method(:zero) { 0 }
+    RUBY
+
+    assert_empty offenses
+  end
+
+  def test_flags_dynamic_define_method
+    offenses = inspect_source(<<~RUBY)
+      define_method(name) { 0 }
+    RUBY
+
+    assert_equal ["Spinel does not support `define_method`."], offenses.map(&:message)
+  end
+
   def test_flags_module_prepend_but_allows_receiver_prepend
     offenses = inspect_source(<<~RUBY)
       prepend Greeter
@@ -89,6 +105,53 @@ class TestUnsupportedCop < Minitest::Test
 
     assert_equal 1, offenses.length
     assert_equal ["Spinel does not support module/class `prepend`."], offenses.map(&:message)
+  end
+
+  def test_allows_supported_instance_eval
+    offenses = inspect_source(<<~RUBY)
+      builder.instance_eval { add(1) }
+    RUBY
+
+    assert_empty offenses
+  end
+
+  def test_allows_instance_eval_trampoline
+    offenses = inspect_source(<<~RUBY)
+      def configure(&block)
+        instance_eval(&block)
+      end
+    RUBY
+
+    assert_empty offenses
+  end
+
+  def test_flags_unsupported_instance_eval_shapes
+    offenses = inspect_source(<<~RUBY)
+      instance_eval { add(1) }
+
+      def configure(&block)
+        log(block)
+        instance_eval(&block)
+      end
+    RUBY
+
+    assert_equal 2, offenses.length
+    assert_equal [
+      "Spinel does not support `instance_eval`.",
+      "Spinel does not support `instance_eval`.",
+    ], offenses.map(&:message)
+  end
+
+  def test_allows_module_singleton_attr_accessor
+    offenses = inspect_source(<<~RUBY)
+      module Settings
+        class << self
+          attr_accessor :adapter
+        end
+      end
+    RUBY
+
+    assert_empty offenses
   end
 
   def test_allows_supported_calls
