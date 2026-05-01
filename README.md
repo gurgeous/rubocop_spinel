@@ -45,7 +45,7 @@ Thread.new { puts Example.bad }
 - allow `recv.instance_eval { ... }` ([Spinel #15](https://github.com/matz/spinel/pull/15))
 - allow `def m(&block); instance_eval(&block); end` ([Spinel #124](https://github.com/matz/spinel/pull/124))
 - allow static `define_method(:name) { ... }` ([Spinel 26e6aae](https://github.com/matz/spinel/commit/26e6aae))
-- allow module singleton accessors ([Spinel #126](https://github.com/matz/spinel/issues/126)
+- allow module singleton accessors ([Spinel #126](https://github.com/matz/spinel/issues/126))
 
 #### 0.0.1 (Apr '26)
 
