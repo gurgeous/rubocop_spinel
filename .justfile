@@ -23,7 +23,7 @@ test:
 
 test-spinel:
   bundle exec rubocop -c test/test_spinel.yml -r ./lib/rubocop_spinel --only Spinel/Unsupported \
-    ../spinel/test ../spinel/spinel_codegen.rb
+    ../spinel/test ../spinel/benchmark/bm_send_bmethod.rb ../spinel/spinel_codegen.rb
 
 test-watch *ARGS:
   watchexec --stop-timeout=0 --clear clear just test "{{ARGS}}"
