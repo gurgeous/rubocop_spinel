@@ -12,18 +12,18 @@ module RuboCop
           extend
           method_missing
           module_eval
-          module_function
           public_send
           remove_method
           singleton_method
           undef_method
         ].freeze
-        RESTRICT_ON_SEND = (BANNED_METHODS + %i[define_method instance_eval prepend send]).freeze
+        RESTRICT_ON_SEND = (BANNED_METHODS + %i[define_method instance_eval module_function prepend send]).freeze
         TOP_LEVEL_CONSTS = %i[Mutex Thread].freeze
 
         def on_send(node)
           return handle_define_method(node) if node.method_name == :define_method
           return handle_instance_eval(node) if node.method_name == :instance_eval
+          return handle_module_function(node) if node.method_name == :module_function
           # `prepend` is only unsupported as a module/class feature.
           return handle_prepend(node) if node.method_name == :prepend
           return if allowed_send?(node)
@@ -59,6 +59,12 @@ module RuboCop
           add_offense(node.loc.selector, message: message_for(:instance_eval))
         end
 
+        def handle_module_function(node)
+          return if supported_module_function?(node)
+
+          add_offense(node.loc.selector, message: message_for(:module_function))
+        end
+
         # Spinel rewrites receiver-style `obj.send(:name)` during parsing.
         def allowed_send?(node)
           node.method_name == :send && node.receiver && node.first_argument&.sym_type?
@@ -77,6 +83,14 @@ module RuboCop
 
         def supported_define_method?(node)
           node.receiver.nil? && node.block_node && node.arguments.one? && node.first_argument&.sym_type?
+        end
+
+        def supported_module_function?(node)
+          node.receiver.nil? && !node.arguments? && module_body?(node)
+        end
+
+        def module_body?(node)
+          singleton_owner(node)&.module_type?
         end
 
         # Spinel supports `recv.instance_eval { ... }` and the exact

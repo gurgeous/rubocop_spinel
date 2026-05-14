@@ -40,13 +40,14 @@ Thread.new { puts Example.bad }
 
 ## Changelog
 
-#### 0.0.2 (unreleased)
+#### 0.2.0 (May '26)
 
 - allow `recv.instance_eval { ... }` ([Spinel #15](https://github.com/matz/spinel/pull/15))
 - allow `def m(&block); instance_eval(&block); end` ([Spinel #124](https://github.com/matz/spinel/pull/124))
 - allow static `define_method(:name) { ... }` ([Spinel 26e6aae](https://github.com/matz/spinel/commit/26e6aae))
+- allow no-argument `module_function` in module bodies ([Spinel #295](https://github.com/matz/spinel/pull/295))
 - allow module singleton accessors ([Spinel #126](https://github.com/matz/spinel/issues/126))
 
-#### 0.0.1 (Apr '26)
+#### 0.1.0 (Apr '26)
 
 - first release

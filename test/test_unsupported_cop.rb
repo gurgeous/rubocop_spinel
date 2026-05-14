@@ -154,6 +154,49 @@ class TestUnsupportedCop < Minitest::Test
     assert_empty offenses
   end
 
+  def test_allows_module_function_in_module_body
+    offenses = inspect_source(<<~RUBY)
+      module Helpers
+        module_function
+
+        def count
+          1
+        end
+      end
+    RUBY
+
+    assert_empty offenses
+  end
+
+  def test_flags_module_function_with_explicit_names
+    offenses = inspect_source(<<~RUBY)
+      module Helpers
+        def count
+          1
+        end
+
+        module_function :count
+      end
+    RUBY
+
+    assert_equal ["Spinel does not support `module_function`."], offenses.map(&:message)
+  end
+
+  def test_flags_module_function_outside_module_body
+    offenses = inspect_source(<<~RUBY)
+      module_function
+
+      class Helpers
+        module_function
+      end
+    RUBY
+
+    assert_equal [
+      "Spinel does not support `module_function`.",
+      "Spinel does not support `module_function`.",
+    ], offenses.map(&:message)
+  end
+
   def test_allows_supported_calls
     offenses = inspect_source(<<~RUBY)
       require "set"
