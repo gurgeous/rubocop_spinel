@@ -7,6 +7,7 @@
 - After changes, run `just check`
 - Use `just fmt` / `just lint`, not rubocop or prettier directly
 - Keep commit messages under 80 chars
+- PR titles/bodies: super succinct, 1-2 short sentences or 1-2 bullets max
 - Fail fast; don't be overly defensive
 
 ## Layout
