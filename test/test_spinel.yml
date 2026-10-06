@@ -1,3 +1,7 @@
+plugins:
+  - rubocop_spinel
+
 AllCops:
   NewCops: disable
+  SuggestExtensions: false
   TargetRubyVersion: 3.3

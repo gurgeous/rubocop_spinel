@@ -1,5 +1,61 @@
 ---
+Spinel/Divergence:
+  Description: Flag Ruby that Spinel compiles but runs differently from CRuby.
+  Enabled: true
+  VersionAdded: "0.3.0"
+  # features that trap SIGINT to raise Interrupt, as CRuby does, eg. a package of your own
+  InterruptRequires: []
+
 Spinel/Unsupported:
-  Description: Ban Ruby features unsupported by Spinel.
+  Description: Flag Ruby that Spinel refuses to compile or cannot run.
   Enabled: true
   VersionAdded: "0.1.0"
+  VersionChanged: "0.3.0"
+  # features the project provides itself, eg. as spin packages, exempt from UnsupportedRequires
+  AllowedRequires: []
+  # stdlib that `require` cannot load under Spinel (`spin build` refuses it)
+  UnsupportedRequires:
+    - abbrev
+    - continuation
+    - coverage
+    - date
+    - delegate
+    - did_you_mean
+    - English
+    - etc
+    - fcntl
+    - find
+    - getoptlong
+    - io/nonblock
+    - io/wait
+    - ipaddr
+    - matrix
+    - mutex_m
+    - objspace
+    - observer
+    - open-uri
+    - pp
+    - prettyprint
+    - prime
+    - pstore
+    - psych
+    - racc
+    - rbconfig
+    - readline
+    - reline
+    - resolv
+    - ripper
+    - shellwords
+    - singleton
+    - timeout
+    - tsort
+    - weakref
+    - yaml
+
+Spinel/SystemLibrary:
+  Description: Flag requires that make a Spinel executable depend on a system shared library.
+  Enabled: false
+  VersionAdded: "0.3.0"
+  # bundled Spinel packages that link a system library, and what they link
+  Libraries:
+    openssl: libssl and libcrypto

@@ -21,9 +21,9 @@ pry:
 test:
   rake test
 
+# spinel's passing tests should raise (almost) no Spinel/Unsupported offenses
 test-spinel:
-  bundle exec rubocop -c test/test_spinel.yml -r ./lib/rubocop_spinel --only Spinel/Unsupported \
-    ../spinel/test ../spinel/benchmark/bm_send_bmethod.rb ../spinel/spinel_codegen.rb
+  bundle exec rubocop -c test/test_spinel.yml --only Spinel/Unsupported ../spinel/test/*.rb
 
 test-watch *ARGS:
   watchexec --stop-timeout=0 --clear clear just test "{{ARGS}}"
